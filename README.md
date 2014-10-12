@@ -1,4 +1,4 @@
-jason.github.io
+jason.github.com
 ===============
 
-Jason' blog II
+这里通过wiki 记录php,js 等学习内容
