@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+    <head>
+           <title>Jquery test 1</title>
+        <meta charset="UTF-8">
+        <script src="Jquery.js" type="text/javascript"></script>
+        <script type="text/javascript">
+            $(function() {   /// 标签切换
+                $('.tab a').each(function(index) {
+                    $(this).click(function() {
+                        $(this).addClass('cur').siblings().removeClass('cur'); // 这里的 siblings() 可以不使用!?
+                        $('.tabCont').hide().eq(index).show();
+                    });
+
+                });
+
+
+                //test 3    $(this).get(0)与$(this)[0]等价。
+                $("p").get(0);
+
+                //=================== attr ======================
+                // 把title属性的值设置为src属性的值。
+                $("img.t1").attr("title", function() {
+                    return this.src;
+                });
+
+                //=================== prop ======================
+                //$(".prop input[type='checkbox']").prop("disabled", false);
+                //$(".prop input[type='checkbox']").prop("checked", true);
+                // 设置为相反的属性,  反选
+                $(".prop input[type='checkbox']").prop("checked", function(i, val) {
+                    return !val;
+                });
+
+                //=================== html  each =========================
+//                $("p").each(function(i){
+//                   var v=$(this).html();
+//                   alert(v);
+//                });    
+                $(".text p").html(function(n) {
+                    return "这个 p 元素的 index 是：<font color='red'>" + n + "</font>";
+                });
+                /*  text 只能设置文本, 不理会 html标签
+                 $("p").text(function(n){
+                 return "这个 p 元素的 index 是：<font color='red'>" + n + "</font>";
+                 });    
+                 */
+
+                //=================== val =========================
+                $('.val input:text').val(function() {
+                    return this.value + ' ' + this.className;
+                });
+                // 同时设置多个值
+                $(".val #multiple").val(["Multiple2", "Multiple3"]);
+                $(".val .test3 input").val(["check2", "radio1"]);
+
+                //=================== css =========================
+                $(".css div").css({"border": "1px solid gray", "color": "#ff0011", "background": "lightblue", "width": "200px"});
+                $(".css div").each(function(i) {
+                    $(this).click(function() {
+                        $(this).css({
+                            width: function(index, value) {
+                                //alert(value); // value 计算属性名称[width],  index 是原来的属性值[200px]
+                                return parseFloat(value) * (i + 1);
+                            },
+                            height: function(index, value) {
+                                return parseFloat(value) * (i + 1.2);
+                            },
+                            background: function(index, value) {
+                                return randomColor(); // 获取随机颜色
+                            }
+                        });
+                    });
+                });
+
+                //=================== offset / position=========================
+                var p = $(".offset p:first");
+                var offset = p.offset();  //获取匹配元素在当前视口的相对偏移。
+                p.html("left: " + offset.left + ", top: " + offset.top);
+                // p.offset({ top: 100, left: 300 });  // 设置偏移
+
+                var p2 = $(".offset p:last");
+                var position = p2.position();  //获取匹配元素相对父元素的偏移。
+                p2.html("left: " + position.left + ", top: " + position.top);
+
+                //=================== scroll :  =========================   
+                var initTop = 0;
+                $(".scroll").scroll(function() {
+                    //alert($(this).find('div').scrollTop());
+                    var scrollTop = $(this).scrollTop();
+                    $(this).next('div').find('span').text("scrollTop:" + scrollTop + '  ' + "scrollLeft:" + $(this).scrollLeft());
+                    if (scrollTop < initTop) { //向上
+                        var flag = '-';
+                    } else if (scrollTop > initTop) {
+                        var flag = '+';
+                    }
+                    // 测试设置css
+                    $(".scroll").next('div').css({'width': flag + '=40px', 'height': flag + '=20px'});
+                    initTop = scrollTop;
+                });
+
+                //=================== focus :  =========================             
+                $("#focus").delegate("*", "focus blur", function(event) {
+                    var elem = $(this);
+                    setTimeout(function() {
+                        elem.toggleClass("focused", elem.is(":focus"));
+                    }, 0);
+                });
+                //===================  : contains =========================    
+                //查找所有包含 "John" 的 div 元素
+                $(".contains div:contains('John')").css({"background": "lightblue"});
+                //=================== : has =========================  
+                //给所有包含 span 元素[子代元素都算 ]的 div 元素添加一个 bg-blue 类
+                $('.has div').has('span').addClass('bg-blue');
+                //===================  :hidden  :visible =========================  
+                $('#hidden input:hidden').val('hidden-text');
+                $('#hidden input:visible').val('visible-text');
+
+                //===================  child 选择器 =========================  
+                //在每个 ul 查找第 2 个li   || 从1 开始算   :eq() 是从0开始算   ':eq(index)' 只匹配一个元素
+                $('#child div.child ul li:nth-child(2)').css({'color': 'red', 'font-weight': "bold"});
+                $('#child div.child ul li:eq(0)').css({'color': 'green'});
+                ; //第一个  
+                $('#child div.child ul li:nth-child(odd)').addClass('bg-blue'); //奇数
+                $('#child div.child ul li:nth-child(even)').addClass('bg-gray'); //偶数
+
+                $('#child div.child ul li:only-child').css({'color': 'pink', 'font-weight': "bold"}); 
+
+
+
+
+
+
+
+
+            });
+
+
+
+            // 获取随机颜色
+            function randomColor()
+            {
+                var colorvalue = ["0", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"],
+                        colorprefix = "#",
+                        index;
+                for (var i = 0; i < 6; i++) {
+                    index = Math.round(Math.random() * 14);
+                    colorprefix += colorvalue[index];
+                }
+                return colorprefix;
+            }
+            //var test = randomColor();
+            // alert(test);
+
+        </script>
+        <style>
+            .tab a{padding:2px 10px;}
+            .cur{backgorund:red;font-weight: bold;}
+
+            div{margin:10px;}
+
+
+            .offset p{border:2px solid red;width:300px;}
+
+            .focused {  background: #abcdef;}
+            .bg-blue{background: lightblue;}
+            .bg-gray{background: gray;}
+        </style>    
+    </head>
+    <body>
+        <div>
+            <div>
+                <div class="tab"><a href="javascript:;" class="cur">test111</a><a href="javascript:;" >运用参数</a><a href="javascript:;">颜色与运用</a></div>
+                <div class="tabCont">
+                    testst1111
+                </div>
+            </div>
+            <div class="tabCont" style="display:none;">
+                运用参数
+                运用参数
+                运用参数
+            </div>
+            <div class="tabCont" style="display:none;">
+                颜色与运用
+                颜色与运用
+                颜色与运用
+            </div>
+        </div>
+        <hr />
+        <h3>test2</h3>
+        <div class="test2">
+            <ul>          
+            </ul>    
+        </div>
+        <h5>=======================Test: html text 属性=========================</h5>
+        <div class='text'>
+            <h3>test3</h3>        
+            <p> p1 </p>
+            <p> p2 </p>        
+            <p> p3 </p> 
+        </div>  
+        <h5>=======================Test: attr  / removeAttr属性=========================</h5>
+        <img  class="t1" src="http://www.baidu.com/img/baidu_sylogo1.gif" />
+
+        <h5>=======================Test: prop / removeProp属性=========================</h5>
+        <div class="prop">
+            1<input type="checkbox" name="prop" checked />
+            2<input type="checkbox" name="prop" checked />
+            3<input type="checkbox" name="prop"  />
+            4<input type="checkbox" name="prop"  />
+        </div>
+
+        <h5>=======================Test: val 属性=========================</h5>
+        <div class="val" >
+            <input type="text"  class="test1"/> test1
+            <input type="text"  class="test2""/> test2
+
+            <select id="multiple" multiple="multiple">
+                <option selected="selected">Multiple</option>
+                <option>Multiple2</option>
+                <option selected="selected">Multiple3</option>
+            </select><br/>
+            <div class="test3" >
+                <input type="checkbox" value="check1"/> check1
+                <input type="checkbox" value="check2"/> check2
+                <input type="radio" value="radio1"/> radio1
+                <input type="radio" value="radio2"/> radio2
+            </div>
+        </div>
+
+        <h5>=======================Test: css : 点击div 设置大小 和随机颜色  || addClass / removeClass / toggleClass[有则删, 无则添]=========================</h5>
+        <div class="css">
+            <div>div 1</div>
+            <div>div 2</div>          
+            <div>div 3</div>       
+            <div>div 4</div>          
+        </div>
+
+        <h5>=======================Test: offset / position=========================</h5>
+        <div class="offset">
+            <p >offset test</p>
+            <p>position test</p>
+        </div>
+
+        <h5>=======================Test: scrollTop /scrollLeft=========================</h5>
+        <div class='scroll' style="border:1px solid blue;width:300px;height:100px;overflow:auto;">
+
+            <div style="height: 300px;width:600px;border: 1px solid gray;">
+
+            </div>
+        </div>
+        <div style="border:1px solid green;width:400px;background: pink;">scroll 提示:<span></span></div>
+
+        <h5>=======================Test: focus=========================</h5>
+        <div id="focus">    
+            <input tabIndex="1">   
+            <input tabIndex="2">    
+            <select tabIndex="3">      
+                <option>select menu</option>   
+            </select>   
+            <div tabIndex="4">    a div    </div>
+
+        </div>
+
+        <h5>=======================Test:  contains =========================</h5>
+        <div class="contains" >
+            <div>John Resig</div>
+            <div>George Martin</div>
+            <div>Malcom John Sinclair</div>
+            <div>J. Ohn</div>       
+        </div>  
+
+        <h5>=======================Test: has =========================</h5>
+        <div class="has" >
+            <div><span>span 1</span></div>
+            <div><span>span 2</span></div>
+            <div><span>span 3</span></div>
+            <div><p><span>P -- span</span></p></div>
+            <div><p><p><span>P--P -- span</span></p></p></div>
+        </div>
+
+        <h5>=======================Test: 选择器 :hidden  :visible =========================</h5>
+        <div id="hidden" >
+            <input type='hidden' value='' /> <input type='hidden' value='' />
+            <input type='text' value='' /> <input type='text' value='' />
+        </div>
+
+        <h5>=======================Test: [attribute] 通过属性选择 =========================</h5>
+        <div class="attribute" >
+            [attribute]   --包含指定属性的元素: 如 $('div[id]') 表示选择含有id属性的div元素</br>
+            [attribute=value]   如: $('input[name="username"]') </br>
+            [attribute!=value] </br>
+            [attribute^=value] </br>
+            [attribute$=value] </br>
+            [attribute*=value] </br>
+            [attrSel1][attrSel2][attrSelN] </br>
+        </div>
+
+        <h5>=======================Test: 子元素 =========================</h5>
+        <div id="child" > 
+            </br>  :first-child   匹配第一个子元素    ':first' 只匹配一个元素，而此选择符将为每个父元素匹配一个子元素
+            </br>  :last-child   匹配最后一个子元素    ':last'只匹配一个元素，而此选择符将为每个父元素匹配一个子元素
+            </br>  :first-of-type 1.9+      
+            </br>  :last-of-type 1.9+ 
+            </br>  :nth-child   匹配其父元素下的第N个子或奇偶元素    ':eq(index)' 只匹配一个元素
+            </br>  :nth-last-child() 1.9+ 
+            </br>  :nth-last-of-type() 1.9+ 
+            </br>  :nth-of-type() 1.9+ 
+            </br>  :only-child 
+            </br>  :only-of-type 1.9+ 
+
+            <p>--------示例--------</p>
+            <div class='child'>
+                <ul>
+                    <li>John</li>
+                    <li>Karl</li>
+                    <li>Brandon</li>
+                </ul>
+                <ul>
+                    <li>Glen</li>
+                    <li>Tane</li>
+                    <li>Ralph</li>
+                </ul>
+                <ul>
+                    <li>Only -child</li>
+                </ul>
+            </div>
+        </div>    
+
+        <h5>=======================Test: =========================</h5>
+        <div class="" >
+
+        </div>
+
+
+        <h5>=======================Test: =========================</h5>
+        <div style="background: url('base_z1.png') no-repeat scroll 0 -5432px rgba(0, 0, 0, 0)" >
+            aaaaaaa<br/>
+        </div>
+        <table>
+            <tr>
+                <td>
+                    aaaaaaaaaaaaaaaaaa
+                </td>
+            </tr>
+               <tr>
+                <td>
+                    bbbbbbbbbbbbbbb
+                </td>
+            </tr>         
+        </table>
+        
+        
+        
+        
+    </body>
+</html>

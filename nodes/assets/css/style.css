@@ -1,0 +1,10 @@
+
+/*-----toggler----*/
+p .toggler{}
+p .toggler input{border: none;font-size: 12px;}
+
+
+
+/*---base--*/
+.flag{}/*--nothing here just a flag--*/
+.hidden{display:none;}
