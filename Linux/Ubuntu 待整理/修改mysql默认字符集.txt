@@ -1,0 +1,27 @@
+在网上查询到以下解决办法方法：
+
+    修改mysql的启动配置文件my.cnf：
+
+    找到[client] 添加：
+
+    default-character-set=utf8
+
+    找到[mysqld] 添加：
+
+    default-character-set=utf8
+
+    init_connect='SET NAMES utf8'
+
+    然后重启mysql服务。
+
+可是我根据这样修改后启动mysql服务报错，启动不了。在网上试了多种解决办法，最后找到一个方法，可以解决，如下：
+
+其他的还跟上面一样，只有在[mysqld]下面添加的
+
+default-character-set=utf8
+
+改为：
+
+character-set-server=utf8
+
+输入命令sudo service mysql restart重新启动mysql，启动成功！再查看编码为：
