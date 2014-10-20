@@ -1,0 +1,285 @@
+ubuntu下的nginx+php+mysql配置
+ 
+ 
+ 
+1、更新
+ 
+  www.2cto.com  
+ 
+1
+ 
+sudo apt-get update
+ 
+2、安装nginx
+ 
+ 
+ 
+1
+ 
+sudo apt-get intsall nginx 
+ 
+Ubuntu安装之后的文件结构大致为:
+ 
+* 所有的配置文件都在/etc/nginx下,并且每个虚拟主机已经安排在了/etc/nginx/sites-available下  www.2cto.com  
+ 
+*程序文件在/usr/sbin/nginx * 日志放在了/var/log/nginx中
+ 
+*并已经在/etc/init.d/下创建了启动脚本nginx
+ 
+* 默认的虚拟主机的目录设置在了/var/www/nginx-default
+ 
+ 
+ 
+下面可以启动nginx来看看效果(请确保80端口没有其他服务在使用):
+ 
+ 
+ 
+1
+ 
+sudo /etc/init.d/nginx start 
+ 
+#或者简单的
+ 
+ 
+ 
+1
+ 
+service nginx start 
+ 
+然后打开浏览器,查看http://localhost/ 看看是否看到了”Welcome to nginx!” 如果看到了,说明安装成功.
+ 
+当然,基本上,这块儿都不会出问题. 如果运行不成功,可以先
+ 
+ 
+ 
+1
+ 
+sudo killall apache2 
+ 
+杀掉apache进程
+ 
+3、安装php
+ 
+ 
+ 
+sudo apt-get install php5 php5-cgi php5-mysql php5-curl php5-gd php5-idn php-pear php5-imagick php5-imap php5-mcrypt php5-memcache php5-mhash php5-ming php5-pspell php5-recode php5-snmp php5-tidy php5-xmlrpc php5-sqlite php5-xsl
+ 
+ 
+ 
+ 
+ 
+4、安装spawn-fcgi
+ 
+为什么要安装spawn-fcgi呢,它用来控制php-cgi进程,以防止进程崩溃或是单进程的效率太低.
+ 
+网上很多人都说要使用spawn-fcgi必须得安装lighttpd,实际上不必要,可以直接安装spawn-fcgi
+ 
+运行:
+ 
+ 
+ 
+1
+ 
+sudo apt-get install spawn-fcgi 
+ 
+5、配置
+ 
+接下来就是最让人头疼的配置.
+ 
+配置Nginx和spawn-fcgi配合运行
+ 
+(1).在/etc/nginx/fastcgi_params 文件最后,加入一行,可以用
+ 
+ 
+ 
+1
+ 
+sudo vi /etc/nginx/fastcgi_params 
+ 
+加入此行:
+ 
+ 
+ 
+1
+ 
+fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+ 
+(2).另外需要在PHP-CGI的配置文件(Ubuntu 上此配置文件位于/etc/php5/cgi/php.ini)中,找到cgi.fix_pathinfo选项,修改为:
+ 
+ 
+ 
+1
+ 
+cgi.fix_pathinfo=1;
+ 
+这样php-cgi方能正常使用SCRIPT_FILENAME这个变量.
+ 
+(3).打开/etc/nginx/sites-available/default文件在
+ 
+ 
+ 
+1
+ 
+2
+ 
+3
+ 
+server {
+ 
+listen 80;
+ 
+server_name localhost;
+ 
+下面添加web根目录的绝对地址,这里是使用的是nginx的默认地址
+ 
+ 
+ 
+1
+ 
+root /var/www/nginx-default
+ 
+即root和server_name同级这段即相当于apache的默认目录
+ 
+如果没有这个的话,容易在执行php 文件的时候,会提示”No input file specified”.
+ 
+我就曾在此绕了好大个圈子才发现问题.然后修改
+ 
+ 
+ 
+#location ~ .php$ {
+ 
+#fastcgi_pass 127.0.0.1:9000;
+ 
+#fastcgi_index index.php;
+ 
+#fastcgi_param SCRIPT_FILENAME /scripts$fastcgi_script_name;
+ 
+#includefastcgi_params;
+ 
+#}
+ 
+修改成
+ 
+ 
+ 
+location ~ .php$ {
+ 
+fastcgi_pass 127.0.0.1:9000;
+ 
+fastcgi_index index.php;
+ 
+fastcgi_param SCRIPT_FILENAME /var/www/nginx-default$fastcgi_script_name;
+ 
+include /etc/nginx/fastcgi_params; #包含fastcgi的参数文件地址
+ 
+6、开始fast_cgi进程
+ 
+ 
+ 
+1、sudo /usr/bin/spawn-fcgi -a 127.0.0.1 -p 9000 -C 5 -u www-data -g www-data -f /usr/bin/php5-cgi -P /var/run/fastcgi-php.pid
+ 
+ 
+ 
+7、设置开机启动fastcgi进程并启动
+ 
+ 
+ 
+1
+ 
+sudo vi /etc/rc.local
+ 
+添加下一行
+ 
+ 
+ 
+1
+ 
+/usr/bin/spawn-fcgi -a 127.0.0.1 -p 9000 -C 5 -u www-data -g www-data -f /usr/bin/php5-cgi -P /var/run/fastcgi-php.pid
+ 
+如果打开php文件出现:No input file specified请检查php.ini的配置中
+ 
+ 
+ 
+1
+ 
+cgi.fix_pathinfo=1 
+ 
+1
+ 
+doc_root=
+ 
+还有,每个虚机要根据自己不同的虚机设置不同的目录,要保证这个路径正确.
+ 
+检查/etc/nginx/sites-available下的配置文件中,server内包含 root 及地址 而非location内的root
+ 
+启动
+ 
+ 
+ 
+1
+ 
+fast-cgisudo /usr/bin/spawn-fcgi -a 127.0.0.1 -p 9000 -C 5 -u www-data -g www-data -f /usr/bin/php5-cgi -P /var/run/fastcgi-php.pid
+ 
+参数含义如下
+ 
+* -f 指定调用FastCGI的进程的执行程序位置,根据系统上所装的PHP的情况具体设置
+ 
+* -a 绑定到地址addr
+ 
+* -p 绑定到端口port
+ 
+* -s 绑定到unix socket的路径path
+ 
+* -C 指定产生的FastCGI的进程数,默认为5(仅用于PHP)
+ 
+* -P指定产生的进程的PID文件路径
+ 
+* -u和-g FastCGI使用什么身份(-u 用户 -g 用户组)运行,Ubuntu下可以使用www-data,其他的根据情况配置,如nobody、apache等现在可以在web根目录下放个探针或php文件测试一下了
+ 
+8、安装mysql
+ 
+ 
+ 
+1
+ 
+sudo apt-get install mysql-server mysql-client
+ 
+中间会提示输入Root用户密码,依次输入即可.
+ 
+启动MySQL
+ 
+ 
+ 
+1
+ 
+sudo /etc/init.d/mysql start
+ 
+测试mysql服务是否正常:
+ 
+运行
+ 
+ 
+ 
+1
+ 
+mysql -uroot -p
+ 
+输入mysql密码
+ 
+ 
+ 
+1
+ 
+ show databases;
+ 
+如果看到下面的内容
+ 
+| Database |
+ 
+| information_schema |
+ 
+| mysql |
+ 
+则mysql已正确安装了.
+ 
+至此,ubuntu下的nginx+php+mysql就安装完成了.
