@@ -28,3 +28,6 @@
 		yum -y upgrade
 		
 		升级所有包，不改变软件设置和系统设置，系统版本升级，内核不改变
+
+4. [Ubuntu(Debain)和 CentOS安装软件命令的区别](http://blog.csdn.net/fatshaw/article/details/5671708) _需了解_
+5. 
