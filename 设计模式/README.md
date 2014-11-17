@@ -21,8 +21,15 @@
 		- 面向过程,不使用设计模式 [5-1-observer-js-base.php](5-1-observer-js-base.php)
 		- 使用观察者模式 [5-2-observer-js.php](5-2-observer-js.php)
 	- php 实现 [5-3-observer.php](5-3-observer.php "5-3-observer.php")
-- 职责链模式
-- 策略模式
+- 职责链模式 (chain of resionbility)
+	- 面向过程实现举报功能  [6-1-chain-base.php](6-1-chain-base.php)
+	- 使用责任链模式完成举报功能 [6-2-chain.php](6-2-chain.php)
+
+- 策略模式 (和工厂模式类似)
+	- 和工厂模式的区别: 工厂模式返回的是不同的子类,通过调用这些子类的方法实现功能; 而策略模式是将这些子类赋值给一个父类的一个属性(类似零部件),由这个零部件去完成功能,调用者不需要去触碰这些子类.
+	- 示例 [7-Strategy.php](7-Strategy.php)
+
+
 - 装饰模式
 - 适配器模式
 - 桥接模式
