@@ -153,7 +153,27 @@
 		            console.log(arr2);
 		        }
 
- 2.  
+ 2. 数组操作(截取,插入,删除)
+ 
+        /*---------1. 数组插入,删除-----------*/
+        var arr = ["php", "java", "javascript"];
+        console.log(arr);
+        var s = arr.splice(1, 1);  // 从第一项开始删除 1项
+        console.log(s, arr); // ["java"] ["php", "javascript"]
+        var arr = ["php", "java", "javascript"];
+        var s = arr.splice(0, 0, "asp", "C#");  // 在数组起始位置插入2项
+        console.log(s, arr);  // [] ["asp", "C#", "php", "java", "javascript"]
+
+        var arr = ["php", "java", "javascript"];
+        var s = arr.splice(1, 2, "asp", "C#");  // 从第一项开始,删除2项再插入2项
+        console.log(s, arr);  //  ["java", "javascript"] ["php", "asp", "C#"]
+
+        /*------2. 数组截取-------*/
+        var arr = ["asp", "C#", "php", "java", "javascript"];
+        var s1 = arr.slice(0, 3);
+        var s2 = arr.slice(3, 5);
+        console.log(s1, s2); // ["asp", "C#", "php"] ["java", "javascript"]
+ 
  
 ###6. js 获取当前页面的链接
 
