@@ -277,7 +277,33 @@
 				} 
 				fn();
 
-###10. 
+###10. JS 操作 iframe
+
+ - (1) 父窗口操作 iframe
+
+ 	- js 写法
+ 		
+		document.getElementById('iframe').contentWindow //查找iframe加载的页面的window对象  
+		document.getElementById('iframe').contentWindow.document //查找iframe加载的页面的document对象  
+		document.getElementById('iframe').contentWindow.document.body //查找iframe加载的页面的body对象  
+		document.getElementById('iframe').contentWindow.document.getElementById('icontent') //查找iframe加载的页面的id为icontent的对象  	
+
+ 	- jquery
+	
+		$('#iframe').contents() //查找iframe加载的页面的document对象  
+		$('#iframe').contents().find('body') //查找iframe加载的页面的body对象  
+		$('#iframe').contents().find('body').find('#icontent') //查找iframe加载的页面的id为icontent的对象  
+
+ - (2)  iframe 操作父窗口
+
+	- js
+	
+		window.parent.document.getElementById('reply-form') //查找父页面中id为 reply-form 的对象  
+		window.parent.toshow('ccccchild');   // 调用父页面中的 toshow() 方法
+	- jquery
+	
+		var _commentBox = $('#reply-form',window.parent.document);  // 获取父窗口  $('#reply-form')
+
 
 
 1. A
