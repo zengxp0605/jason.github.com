@@ -287,6 +287,7 @@
 		document.getElementById('iframe').contentWindow.document //查找iframe加载的页面的document对象  
 		document.getElementById('iframe').contentWindow.document.body //查找iframe加载的页面的body对象  
 		document.getElementById('iframe').contentWindow.document.getElementById('icontent') //查找iframe加载的页面的id为icontent的对象  	
+		document.getElementById('iframe').contentWindow.resizeImg(); // 调用iframe 页面中的方法,方法在iframe中执行		
 
  	- jquery
 	
