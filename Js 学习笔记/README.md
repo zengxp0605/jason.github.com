@@ -305,6 +305,64 @@
 	
 		var _commentBox = $('#reply-form',window.parent.document);  // 获取父窗口  $('#reply-form')
 
+###11. JS 作用域
+1. 定义的函数和变量会被前置     
+   
+          function test(a, b) {
+	          var c = 10;
+	          var e = function _e() {};
+	           (function y() {alert('yyy');});
+	          var b = 20;
+	        }
+        // console.log(a);
+        // console.log(b);
+        //  console.log(c); // 这里输出 a b c 均会报错,这些变量为函数变量,不是全局变量,
+        console.log(x);  // 这里调用x 不会报错,输出是x 为函数
+        x();
+        var x = 10;
+        console.log(x);
+        x = 20;
+        function x() {alert(x)};  // 这里的function  函数声明会被前置处理,所以不会影响上一个语句的赋值
+        console.log(x); // 这里输出的是20
+        if (true) {
+          var t1 = 1;
+        } else {
+          // 虽然这句没有执行,但是var 变量声明会被前置处理
+          var t2 = 2;  // 这里如果不使用var关键字,则后面的 console.log(t2) 会报错
+        }
+        console.log(t1);
+        console.log(t2); 
+2. 	this 关键字的调用  
+             
+	    function MyClass() {
+          this.a = 37;
+        }
+        var o = new MyClass();
+        console.log(o.a);  //37
+        function C2() {
+          this.a = 37;
+          return {a: 38};
+        }
+        var o = new C2();
+        console.log(o.a); //38
+
+3.  arguments 的使用
+	
+	  	function foo(x, y, z) {
+         // 'use strict';
+          console.log(arguments.length); // 2  实参的个数
+          console.log(arguments[0]); //1
+          arguments[0] = 10;  // 如果使用严格模式,这里不会直接改变 x 的值
+          console.log(x); //10 ;如果不使用严格模式, 改变了x 的值,x 和  arguments[0] 是绑定的关系,TODO 这里有问题!!!
+          console.log(arguments[1]); // 2
+          console.log(arguments[2]); // undefined
+           console.log(arguments.callee);  // 严格模式时将会报错, 不是严格模式则输出  foo
+        }
+        foo(1, 2);
+        console.log('foo.name = ' + foo.name); // foo
+        console.log('foo.length = ' + foo.length); //3 形参的个数
+
+
 
 
 1. A
