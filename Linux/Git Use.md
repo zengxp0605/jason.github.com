@@ -13,6 +13,7 @@
 	- `vi readme.md` // 新建一个文件 readme.md, 输入一些内容
 	- `git add readme.md`  // 将 readme.md 添加到本地仓库
 	- `git commit -m "add readme.md" ` // 将文件提交到仓库,"add readme.md"是提交的说明
+	- 
 	
 
 2. 查看文件修改
@@ -20,3 +21,9 @@
     - `git status`  //查看提交的结果
     - `git diff readme.md` // 查看readme.md 文件的修改内容
     - 
+
+3. 提交的流程
+	- git pull  # 拉取远程仓库的代码
+	- git add -A .   # 添加当前目录修改
+	- git commit -m 'edit'  # 提交到本地仓库
+	- git push	 # 推送代码
