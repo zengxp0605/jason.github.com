@@ -1,0 +1,67 @@
+<!Doctype html>
+<html>
+	<head>
+		<title>js 面向对象编程实例</title>
+		<meta charset="utf-8">
+	</head>
+	<body>
+		<div>js 面向对象编程</div>
+		<script>
+		function Person(name,age){
+			this.name = name;
+			this.age = age;
+		}
+
+		Person.prototype.hi = function(){
+			console.log('Hi,My name is ' + this.name + ',I am ' + this.age + ' years old now!');
+		}
+
+		Person.prototype.walk = function(){
+			console.log(this.name + 'is walking...');
+		}
+
+		Person.prototype.LEGS_NUM = 2;
+		Person.prototype.ARMS_NUM = 2;
+		/***--------------------
+		 * 以上为Person 父类
+		 * 下面的Student将继承该父类[基于原型链的继承]
+		 *---------------------***/
+		function Student(name,age,className){
+			Person.call(this,name,age); // 通过call 方法
+			this.className = className;
+		}
+
+		Student.prototype = Object.create(Person.prototype);
+		Student.prototype.constructor = Student; // 设置构造器
+		// 覆盖父类的hi方法
+		Student.prototype.hi = function(){
+			console.log('Hi,My name is ' + this.name + ',I am ' + this.age + ' years old now,and I am from ' + this.className);
+		}
+
+		Student.prototype.learn = function(subject){
+			console.log(this.name + 'is learning ' + subject  +' at ' + this.className);
+		}
+
+		// 测试代码,console 里查看结果
+		var jason = new Student('jason',27,'Class 2,Grade 3');
+		jason.hi();
+		jason.learn('math');
+		jason.walk();
+		console.log(jason.LEGS_NUM,jason.ARMS_NUM);
+		console.log(jason,jason.toString(),jason.valueOf());
+		console.log(jason.prototype); //undefined ??
+		console.info('---------分割线---------');
+		// 给Student 的原型动态添加属性, jason 实例的原型链同时改变
+		Student.prototype.x = 123;
+		console.log(jason.x);
+		Student.prototype = {y:321}; // 这里无法改变已经实例化的对象jason
+		console.log(jason.x,jason.y); // 123  undefined
+		console.info('---------分割线---------');
+		var jacky = new Student('jacky',32,'Class 3,Grade 1');
+		console.log(jacky.x,jacky.y); // undefined 321
+		//jacky.hi(); // 方法报错
+		
+		</script>
+		<script src="./VoteOper.js"></script>	
+	</body>
+</html>
