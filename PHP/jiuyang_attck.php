@@ -1,7 +1,7 @@
 <meta charset="utf-8">
 <?php
 error_reporting(E_ALL ^ E_NOTICE);
-// 测试 九阳 刮刮卡项目
+// 测试  刮刮卡项目
 
 function curl($url, $post = null, $method = 'POST', $getHeader = false) {
     if (!$url)
