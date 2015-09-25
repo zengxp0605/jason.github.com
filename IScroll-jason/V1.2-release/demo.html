@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<title>iScroll Test: probe</title>
+	<link rel="stylesheet" href="iscroll.css?v1" />
+
+	<script type="text/javascript" src="http://libs.baidu.com/jquery/1.8.3/jquery.min.js"></script>
+	<script type="text/javascript" src="iscroll.js"></script>
+	<script type="text/javascript" src="PageSetting-1.2.js"></script>
+	<script type="text/javascript">
+	$(function(){
+		PageSetting.init({
+			url:'page.php',
+			// url:'page.html', // 没有php 环境可以使用html页面测试
+			firstPage:true,
+			downBtn:true,
+			mouseWheel:true,
+		});
+	});
+		
+	</script>
+
+</head>
+<body>
+	<div id="header">
+		<a href="">iScroll--Jason Zeng：下拉刷新，滚动翻页</a>
+	</div>
+
+	<div id="wrapper">
+		<div id="scroller">
+			<div id="pullDown">
+				<span class="pullDownIcon"></span><span class="pullDownLabel"></span>
+			</div>
+			<ul id="thelist">
+		<!-- 		<li>Pretty row 1</li>
+				<li>Pretty row 2</li>
+				<li>Pretty row 3</li>
+			 -->
+			</ul>
+			<div id="pullUp">
+				<div class="pullUpWrap">
+					<span class="pullUpIcon"></span><span class="pullUpLabel"></span>
+				</div>	
+			</div>
+		</div>
+	</div>
+
+	<div id="footer">### Footer ###</div>
+</body>
+</html>

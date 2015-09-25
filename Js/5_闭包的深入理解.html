@@ -1,0 +1,45 @@
+
+
+<script>
+	var obj = (function () { 
+		var hello = 'Hello World.'; 
+		var fun = function(){
+			alert('test-fun');
+		}
+		return { 
+			sayHello: function () { 
+				alert(hello); 
+			} 
+		}; 
+	})(); 
+	//obj.sayHello(); 
+
+
+	function Foo(name){
+		var v1 = 100;  // 外部无法调用此属性,类似php 中private 属性
+		function run(){ // 无法直接调用此方法
+			alert(a);
+		}
+		this.run = function(){
+			alert('fun-run');
+		}
+		this.test = run;
+		this.getVal = function(){
+			return v1;
+		}
+		this.deposit = function (inc){
+			v1 += inc;
+		}
+		//return {
+		//	test:run,
+		//}
+	}
+	
+	var f = new Foo('Tom');
+	console.log(f);
+	//f.run();
+	//f.test();
+	console.log(f.getVal());
+	f.deposit(123);
+	console.log(f.getVal());
+</script>

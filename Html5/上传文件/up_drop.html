@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html> 
+    <head> 
+        <title>HTML5拖拽上传</title> 
+        <meta charset="utf-8" /> 
+        <style type="text/css"> 
+            *{margin: 0;padding: 0;}
+            #dropzone{ width:300px;height:300px;border:2px dashed gray;} 
+            #dropzone.over {border:2px dashed orange;} 
+            .pro-wrap{width:500px;height:10px;border: 1px solid #005916;}
+            #progress{background-color: #00FFFF;width: 0%;height: 100%;display: inline-block;}
+        </style> 
+    </head> 
+    <body> 
+        <h1>拖拽上传</h1> 
+        <div id="dropzone"></div> 
+        <div class="pro-wrap">
+            <p id="progress"></p>
+        </div>
+        <br />
+        <hr />
+        <p>通过file标签上传</p>
+        <input type="file" multiple/>
+        <script>
+            // 负责ajax发送数据 
+            function upload(fd) {
+              var xhr = new XMLHttpRequest();
+              xhr.open('POST', '__URL__/upfile', true); // 异步传输 
+              // xhr.upload 这是html5新增的api,储存了上传过程中的信息 
+              xhr.upload.onprogress = function (ev) {
+                var percent = 0;
+                if (ev.lengthComputable) {
+                  percent = 100 * ev.loaded / ev.total;
+                  //console.log(percent);
+                  document.getElementById('progress').innerHTML = percent;
+                  document.getElementById('progress').style.width = percent + '%';
+                }
+              }
+              // 这里的success 方法无效??
+              xhr.upload.success = function (ev) {
+                console.log('success', ev);
+              }
+              xhr.send(fd);
+              console.log(xhr.upload, 11111);
+            }
+
+            var dz = document.getElementById('dropzone');
+            dz.ondragover = function (ev) {
+              this.className = 'over';
+              return false;
+            }
+            dz.ondragleave = function () {
+              this.className = '';
+            }
+            dz.ondrop = function (ev) {
+              var fd = new FormData();
+              var files = ev.dataTransfer.files;
+              console.log(files);
+              for (var k in files) {
+                fd.append('file_' + k, files[k]);
+              }
+              upload(fd);
+              return false; // 拦截拖放的正常行为 
+            }
+
+            /**=====以下是通过file标签上传=====***/
+            document.querySelector('input[type="file"]').addEventListener('change', function (e) {
+              uploadFiles('__URL__/upload', this.files);
+            }, false);
+            function uploadFiles(url, files) {
+              var formData = new FormData();
+              for (var k in files) {
+                formData.append('file_' + k, files[k]);
+              }
+              var xhr = new XMLHttpRequest();
+              xhr.open('POST', url, true);
+              xhr.onload = function (e) {
+                console.log(e);
+              };
+              xhr.send(formData); // multipart/form-data
+            }
+        </script> 
+    </body> 
+</html> 

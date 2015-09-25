@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<title>iScroll Test: probe</title>
+	<link rel="stylesheet" href="iscroll-probe.css?v1" />
+
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<script type="text/javascript" src="iscroll-probe.js?v1"></script>
+	<script type="text/javascript">
+
+		var position;
+		var myScroll,
+		pullDownEl, pullDownOffset,
+		pullUpEl, pullUpOffset,
+		generatedCount = 0;
+		var holding = '';
+		function updatePosition () {
+			//console.log(myScroll.y);
+			position.innerHTML = myScroll.y>>0;
+		}
+
+		/**
+		 * 下拉刷新 （自定义实现此方法）
+		 * myScroll.refresh();		// 数据加载完成后，调用界面更新方法
+		 */
+		 function pullDownAction (callback) {
+		 	console.info('pullDownAction');
+			setTimeout(function () {	// <-- Simulate network congestion, remove setTimeout from production!
+				// var el, li, i;
+				// el = document.getElementById('thelist');
+
+				// for (i=0; i<3; i++) {
+				// 	li = document.createElement('li');
+				// 	li.innerText = 'Generated row ' + (++generatedCount);
+				// 	el.insertBefore(li, el.childNodes[0]);
+				// }
+				if(callback)
+					callback();
+				myScroll.refresh();		//数据加载完成后，调用界面更新方法   Remember to refresh when contents are loaded (ie: on ajax completion)
+			}, 1000);	// <-- Simulate network congestion, remove setTimeout from production!
+		}
+
+		/**
+		 * 滚动翻页 （自定义实现此方法）
+		 * myScroll.refresh();		// 数据加载完成后，调用界面更新方法
+		 */
+		 function pullUpAction (callback) {
+		 	console.info('pullUpAction');
+			setTimeout(function () {	// <-- Simulate network congestion, remove setTimeout from production!
+				var el, li, i;
+				el = document.getElementById('thelist');
+
+				for (i=0; i<3; i++) {
+					li = document.createElement('li');
+					li.innerHTML = 'Generated row ' + (++generatedCount);
+					el.appendChild(li, el.childNodes[0]);
+				}
+				if(callback)
+					callback();
+				myScroll.refresh();		// 数据加载完成后，调用界面更新方法 Remember to refresh when contents are loaded (ie: on ajax completion)
+			}, 1000);	// <-- Simulate network congestion, remove setTimeout from production!
+		}
+
+		function loaded () {
+			position = document.getElementById('position');
+			pullDownEl = document.getElementById('pullDown');
+			pullUpEl = document.getElementById('pullUp');	
+			pullDownOffset = pullDownEl.offsetHeight; //顶部最小的高度
+			pullUpOffset = pullUpEl.offsetHeight;
+			myScroll = new IScroll('#wrapper', { 
+				probeType: 3, 
+				//mouseWheel: true,
+				startY:-pullDownOffset,
+			});
+
+			function _initPullLabel(){  // 初始化标签文本
+				pullDownEl.className = '';
+				pullDownEl.querySelector('.pullDownLabel').innerHTML = '下拉刷新...';
+				pullUpEl.className = '';
+				pullUpEl.querySelector('.pullUpLabel').innerHTML = '上拉加载更多...';
+			}
+			_initPullLabel();
+			myScroll.on('scroll', function(){
+				if(holding !='') return;
+				var _this = this;
+				if (_this.y > 5) {
+					pullDownEl.className = 'flip';
+					holding = 'down';
+					pullDownEl.querySelector('.pullDownLabel').innerHTML = '松手刷新...';
+
+				} else if (_this.y < (_this.maxScrollY - 5)) {
+					holding = 'up';
+					pullUpEl.className = 'flip';
+					pullUpEl.querySelector('.pullUpLabel').innerHTML = '松手开始更新...';
+
+				}
+				updatePosition();
+			});
+			myScroll.on('scrollEnd',  function(){
+				console.log('end',holding);
+				if (holding =='down') {
+					pullDownEl.className = 'loading';
+					pullDownEl.querySelector('.pullDownLabel').innerHTML = '加载中...';				
+					pullDownAction(function(){
+						holding = '';
+						_initPullLabel();
+						myScroll.scrollTo(0,-pullDownOffset);//重新回到顶部
+					});	
+				} else if (holding == 'up') {
+					pullUpEl.className = 'loading';
+					pullUpEl.querySelector('.pullUpLabel').innerHTML = '加载中...';				
+					pullUpAction(function(){
+						holding = '';
+						_initPullLabel();
+					});	
+				}
+				updatePosition();
+			});
+			myScroll.on('refresh',  function(){
+				holding = '';
+				console.log('refresh');
+			});
+			function loadFristPage(){
+				$('#thelist').html($('#tmp').html());
+				pullDownAction();
+			}
+			loadFristPage();
+		}
+
+		document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+
+		function test(){
+			//$('#scroller ul').append($('#scroller ul').html());
+			myScroll.refresh();	
+			console.log('test click.');
+		}
+		
+	</script>
+
+</head>
+<body onload="loaded()">
+	<div id="header">
+		<a href="#">iScroll -- Jason Zeng：下拉刷新，滚动翻页</a>
+	</div>
+
+	<div id="monitor" onclick="test()">Y position: <strong id="position">0</strong></div>
+
+	<div id="wrapper">
+		<div id="scroller">
+			<div id="pullDown">
+				<span class="pullDownIcon"></span><span class="pullDownLabel"></span>
+			</div>
+
+			<ul id="thelist">
+		<!-- 		<li>Pretty row 1</li>
+				<li>Pretty row 2</li>
+				<li>Pretty row 3</li>
+				<li>Pretty row 4</li>
+				<li>Pretty row 5</li>
+				<li>Pretty row 6</li>
+				<li>Pretty row 7</li>
+				<li>Pretty row 8</li>
+				<li>Pretty row 9</li>
+				<li>Pretty row 10</li>
+				<li>Pretty row 11</li>
+				<li>Pretty row 12</li>
+				<li>Pretty row 13</li>
+				<li>Pretty row 14</li>
+				<li>Pretty row 15</li> -->
+			</ul>
+
+			<div id="pullUp">
+				<span class="pullUpIcon"></span><span class="pullUpLabel"></span>
+			</div>
+
+		</div>
+	</div>
+		
+			<ul id="tmp" style="display:none;">
+				<li>Pretty row 1</li>
+				<li>Pretty row 2</li>
+				<li>Pretty row 3</li>
+				<li>Pretty row 4</li>
+				<li>Pretty row 5</li>
+				<li>Pretty row 6</li>
+				<li>Pretty row 7</li>
+				<li>Pretty row 8</li>
+				<li>Pretty row 9</li>
+				<li>Pretty row 10</li>
+				<li>Pretty row 11</li>
+				<li>Pretty row 12</li>
+				<li>Pretty row 13</li>
+				<li>Pretty row 14</li>
+				<li>Pretty row 15</li>
+			</ul>
+
+
+	<div id="footer">### Footer ###</div>
+</body>
+</html>
