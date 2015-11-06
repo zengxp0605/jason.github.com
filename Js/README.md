@@ -655,31 +655,31 @@
         console.log(Object.isExtensible(obj));  //false
 
 7. 序列化对象
+
+
+
+8. 整理的一些代码
+		// 死链的图片统一替换为自己的图片
+			$('img').on('error', function () {
+				$(this).prop('src', '/test2/0.jpg');
+			});
 	
-	    var obj = {x: 1, y: true, z: [1, 2, 3], nullVal: null};
-        console.log(JSON.stringify(obj)); //{"x":1,"y":true,"z":[1,2,3],"nullVal":null}
+			// 定义自己的伪类选择器
+			$.extend($.expr[':'], {
+				moreThen100px: function(a) {
+					return $(a).width() > 100;
+				}
+			});
+			$('.box:moreThen100px').click(function() {
+     		 	// creating a simple js alert box
+     		 	alert('The element that you have clicked is over 100 pixels wide');
+     		 });
 
-        obj = {a: undefined, b: NaN, c: Infinity, date: new Date()};
-        console.log(JSON.stringify(obj)); //{"b":null,"c":null,"date":"2015-04-14T04:28:33.087Z"} ; a 为undefined 时没有出现在json字符串中
-        
-        var o = JSON.parse('{"x":"111"}');
-        console.log(o.x); //111
+
+9. end
+10. 
 	
-		// 自定义的序列化
-        var obj = {
-            x:11,
-            y:22,
-            o:{
-                o1:33,
-                o2:44,
-                toJSON:function(){
-                    return this.o1 + this.o2;
-                }
-            }
-        };
-        console.log(JSON.stringify(obj)); //{"x":11,"y":22,"o":77}	
-
-
+			
 
 1. A
 2. B
