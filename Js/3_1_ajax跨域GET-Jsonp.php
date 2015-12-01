@@ -2,12 +2,12 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <script src="/templates/zh-CN/scripts/jquery-1.9.1.js"></script>
+        <script src="http://apps.bdimg.com/libs/jquery/1.8.3/jquery.min.js"></script>
         <script>
             $(function() {
                 $.ajax({
                     async: false,
-                    url: "http://101.81.114.48:8998/test.php",
+                    url: "http://10.0.10.183:8081/test.php",
                     type: "GET",
                     dataType: 'jsonp',
                     //jsonp的值自定义,如果使用jsoncallback,那么服务器端,要返回一个jsoncallback的值对应的对象.
@@ -43,7 +43,13 @@
 $callback = $_GET["jsoncallback"];
 $_t1 = $_GET['t1'];
 $_t2 = $_GET['t2'];
-$result = $callback . "({\"name\":\"zhangsan-{$callback}-{$_t1}-{$_t2}\",\"date\":\"2012-12-03\"})";
+$_arr = array(
+    'name'=>'张三',
+    'age'=>'34',
+    'date'=>date('Y-m-d H:i:s'),
+);
+$result = "{$callback}(". json_encode($_arr).")";
+//$result = $callback . "({\"name\":\"zhangsan-{$callback}-{$_t1}-{$_t2}\",\"date\":\"2012-12-03\"})";
 
 echo $result;
 exit;
