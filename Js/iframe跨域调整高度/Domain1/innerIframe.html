@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>B.html</title>
+        <meta charset="utf-8">
+    </head>
+    <script type="text/javascript">
+        window.onload = function () {
+          var isSet = false, maxCount = 3, count = 0;
+          var inteval = setInterval(function () {
+            console.log(count);
+            try {
+              var search = location.search.replace('?', '');
+              if (isSet || count > maxCount) {
+                clearInterval(inteval);
+                return;
+              }
+              count++;
+              if (search) {
+                var height = search.split('=')[1];
+                var doc = parent.parent.document;
+                var ifr = doc.getElementById('exin-iframe');
+                ifr.style.height = height + 'px';
+                isSet = true;
+              }
+            } catch (e) {
+              clearInterval(inteval);
+              console.log(e.name + ":" + e.message);
+              return;
+            }
+          }, 100);
+          //2秒后无响应则自动停止
+          setTimeout(function(){
+              clearInterval(inteval);
+          },2000);
+        }
+    </script>
+    <body style="padding:0;margin: 0;">
+        Do not delete this file.
+    </body>
+</html>
+
+

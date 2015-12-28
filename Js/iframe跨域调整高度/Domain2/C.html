@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>C.html</title>
+        <meta charset="utf-8">
+
+    </head>
+	<style>
+		*{margin:0;padding:0;}
+		.wrap{
+			background-color:#684520;
+			
+			width:100%;
+		}
+		h1{text-align:center;padding-top:30px;color:#fff;}
+	</style>
+    <body>
+        <div class="wrap">
+			<h1>这是一个很长的页面，我要做跨域iframe的高度自适应</h1>
+			<h2>
+				A,B 是同域的,C 不同域   <br />
+				A 中嵌入iframe C	<br />
+				C (需要跨域引入的页面) ifrAutoHeight.js(与A或C同域的路径)
+			</h2>
+			<ul>
+				<li>页面 A：http://domain1.com/A.html</li>
+				<li>页面 B：http://domain1.com/innerIframe.html</li>
+				<li>页面 C：http://domain2.com/C.html</li>
+				<li>ifrAutoHeight.js：http://domain1/ifrAutoHeight.js 或者 http://domain2/ifrAutoHeight.js</li>
+			</ul>
+			<p>A</p><p>A</p><p>A</p><p>A</p><p>A</p><p>A</p><p>A</p><p>A</p><p>A</p><p>A</p><p>A</p><p>A</p><p>A</p><p>A</p><p>A</p><p>A</p>
+
+			<script type="text/javascript" src="http://domain1.com/ifrAutoHeight.js"></script>
+
+		</div>
+    </body>
+</html>
+
+
