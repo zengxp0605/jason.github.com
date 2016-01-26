@@ -1,0 +1,7 @@
+MODULES_MANAGER_V2
+__init__|E:\IdeaSource\GitHub\jason.github.com\Python3.4\Spider\src\__init__.py
+html_downloader|E:\IdeaSource\GitHub\jason.github.com\Python3.4\Spider\src\html_downloader.py
+html_parser|E:\IdeaSource\GitHub\jason.github.com\Python3.4\Spider\src\html_parser.py
+outputer|E:\IdeaSource\GitHub\jason.github.com\Python3.4\Spider\src\outputer.py
+spider_main|E:\IdeaSource\GitHub\jason.github.com\Python3.4\Spider\src\spider_main.py
+url_manager|E:\IdeaSource\GitHub\jason.github.com\Python3.4\Spider\src\url_manager.py
