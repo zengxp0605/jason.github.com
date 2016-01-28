@@ -1,0 +1,39 @@
+<!doctype html>
+<html ng-app ng-controller="PhoneListCtrl">
+    <head>
+		<meta charset="utf-8">
+		<title ng-bind-template="Google Phone Gallery: {{query}}">2_test</title>
+		<script src="angular.js"></script>
+	</head>
+	<script>
+
+		function PhoneListCtrl($scope,$http) {
+			  $http.get('json-data/phones.json').success(function(data) {
+				$scope.phones = data;
+			  });
+
+			  $scope.orderProp = 'age';
+		}
+	</script>
+    <body >
+		<div class="container-fluid">
+			Search: <input ng-model="query">
+			Sort by:
+			<select ng-model="orderProp">
+			  <option value="name">Alphabetical</option>
+			  <option value="age">Newest</option>
+			</select>
+			<br />
+				orderProp : {{orderProp}}
+
+			<ul class="phones">
+			  <li ng-repeat="phone in phones | filter:query | orderBy:orderProp">
+				{{phone.name}}
+				<p>{{phone.snippet}}</p>
+			  </li>
+			</ul>
+
+		</div>	<hr/>
+		{{phones | json}}
+    </body>
+</html>
