@@ -3,7 +3,7 @@
 <script>
 	var obj = (function () { 
 		var hello = 'Hello World.'; 
-		var fun = function(){
+		var fun = function(){  // 外部无法使用此方法
 			alert('test-fun');
 		}
 		return { 
@@ -12,8 +12,7 @@
 			} 
 		}; 
 	})(); 
-	//obj.sayHello(); 
-
+	//obj.sayHello(); // alert-> Hello World.;
 
 	function Foo(name){
 		var v1 = 100;  // 外部无法调用此属性,类似php 中private 属性

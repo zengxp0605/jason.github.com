@@ -1,0 +1,24 @@
+<html>
+<head>
+<meta charset="utf-8">
+<script>
+var x = 1;  // 定义全局变量x
+function A(y){
+	var x = 2;  // 定义局部变量x
+	function B(z){  // 定义内部函数B
+		console.log(x+y+z);
+	}
+	return B; // 返回内部函数
+}
+var C = A(1);  // 执行A 返回B
+C(1);  // 执行函数B ,结果 4
+console.log(C);
+
+</script>
+
+</head>
+<body>
+	<h3>See console</h3>
+	
+</body>
+</html>
