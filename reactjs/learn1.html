@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>React.js 学习-1</title>
+<!--     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/JSXTransformer.js"></script> -->
+    <script src="./libs/React.js"></script>
+    <script src="./libs/JSXTransformer.js"></script>
+    <script src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
+    <style>
+        .ipt-wrap{margin-top: 30px;}
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <div id="user-list"></div>
+
+    <script type="text/jsx">
+        var TestClickComponent = React.createClass({
+            clickHandler:function(event){
+                var tipEle = React.findDOMNode(this.refs.tip);
+                if(tipEle.style.display == 'none'){
+                    tipEle.style.display = 'inline';
+                } else {
+                    tipEle.style.display = 'none';
+                }
+                event.preventDefault();
+                event.stopPropagation();
+            },
+            render: function() {
+                return (
+                    <div>
+                        <button onClick={this.clickHandler}>显示|隐藏</button>
+                        <span ref="tip">测试点击的内容: {this.props.name}</span>
+                    </div>
+                );
+            },
+        });    
+        
+        var TestInputComponent = React.createClass({
+            getInitialState: function() {
+                return {
+                    inputContent : '',
+                    inputStyle:{
+                        fontSize: '20px',
+                        color: 'red',
+                        display:'block',
+                        marginTop:'20px',
+                    }
+                };
+            },
+            changeHandler:function(event){
+                this.setState({
+                    inputContent: event.target.value
+                });
+                event.preventDefault();
+                event.stopPropagation();
+            },
+            render:function() {
+                return (
+                    <div className="ipt-wrap">
+                        <input type="text" onChange={this.changeHandler} />
+                        <span style={this.state.inputStyle}>{this.state.inputContent}</span>
+                    </div>
+                );
+            },
+        });
+
+        React.render( 
+            <div>
+                <TestClickComponent name="Jason"/>  
+                <TestInputComponent /> 
+            </div>
+            , document.getElementById('container')
+        );
+
+    </script>
+    <script type="text/jsx">
+        // 通过 ajax 异步加载内容
+        var Movies = React.createClass({
+          getInitialState: function() {
+            return {
+              itemList: []
+            };
+          },
+
+          componentDidMount: function() {
+            $.get(this.props.sourceUrl, function(result) {
+              if(!result['rows'])
+                 return;
+                 
+              if (this.isMounted()) {
+                this.setState({
+                  itemList: result['rows']
+                });
+              }
+            }.bind(this), 'json');
+          },
+
+          render: function() {
+            //console.log(this.state.itemList);
+            return (
+              <div>
+              {
+                this.state.itemList.map(function(item, idx){
+                    return <MovieItem item={item} key={idx} />
+                })
+              }
+              </div>
+            );
+          }
+        });
+
+        var MovieItem = React.createClass({
+            getInitialState:function(){
+                return {
+                    style:{
+                        border:'1px solid red',
+                        margin:'10px',
+                        width:'300px',
+                    }
+                };
+            },
+            render: function(){
+                return (
+                    <div style={this.state.style}>
+                        <a href={this.props.item.detail_url} target="_black">{this.props.item.title}</a>
+                    </div>
+                );
+            }
+        });
+        React.render(
+          <Movies sourceUrl="https://raw.githubusercontent.com/zengxp0605/test/master/movies/page_1.json" />,
+          document.getElementById('user-list')
+        );
+    </script>
+</body>
+</html>
