@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>圣杯布局</title>
+  <!-- <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"> -->
+  <meta name="viewport" 
+  content="width=device-width,initial-scale=1.0">
+  <style>
+     * {padding: 0; margin: 0;}
+    .HolyGrail {
+      display: flex;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+
+    header,footer {
+      flex: 1;
+      background-color: #eee;
+    }
+
+    .HolyGrail-body {
+      display: flex;
+      flex: 1;
+    }
+
+    .HolyGrail-content {
+      flex: 1;
+      background-color: #ccc;
+
+    }
+
+    .HolyGrail-nav, .HolyGrail-ads {
+      /* 两个边栏的宽度设为12em */
+      flex: 0 0 12em;
+    }
+
+    .HolyGrail-nav {
+      /* 导航放到最左边 */
+      order: -1;
+      background-color: #aaa;
+    }
+    
+    .HolyGrail-ads {
+      background-color: #bbb;
+    }
+    
+    /**
+     * 媒体查询
+     * 匹配到小屏幕时,自动调整到下面的布局
+     * 中间三块垂直布局
+     */
+    @media (max-width: 768px) {
+      .HolyGrail-body {
+        flex-direction: column;
+        flex: 1;
+      }
+      .HolyGrail-nav,
+      .HolyGrail-ads,
+      .HolyGrail-content {
+        flex: auto;
+      }
+    }
+    
+    /****************input******************/
+
+    .InputAddOn {
+      display: flex;
+    }
+
+    .InputAddOn-field {
+      flex: 1;
+    }
+
+  </style>
+</head>
+<body class="HolyGrail">
+  <header>#footer</header>
+
+  <div class="HolyGrail-body">
+    <main class="HolyGrail-content">#center</main>
+    <nav class="HolyGrail-nav">#nav</nav>
+    <aside class="HolyGrail-ads">#right</aside>
+  </div>
+
+  <footer>
+    <h3>#footer</h3>
+    
+
+    <div class="InputAddOn">
+      <span class="InputAddOn-item">Name:</span>
+      <input class="InputAddOn-field">
+      <button class="InputAddOn-item">OK</button>
+    </div>
+
+  </footer>
+</body>
+</html>
